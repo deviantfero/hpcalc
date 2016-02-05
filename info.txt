@@ -1,0 +1,7 @@
+this software is an assistant to observe pattterns
+in the n-th derivate of a function when x -> is a given
+value
+
+you need to input the function, the value of x and
+the number of n-derivates that you want evaluated in
+that given point
