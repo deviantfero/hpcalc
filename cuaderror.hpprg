@@ -1,0 +1,51 @@
+%%HP: T(0)A(D)F(.);
+@ Argumentos:
+@ Autor:
+@ E-mail:
+@ Versión:
+@ Creado con HPUserEdit 6
+
+«
+
+
+
+"ERROR CUADRATICO MINIMO"
+{
+{ "A0" "A0"  }
+{ "Ak" "'Ak'"  }
+{ "Bk" "'Bk'"  }
+{ "L" "{-L L}" }
+{ "F(X)" "'F(X)'"  }
+{ "N" "N"  }
+}
+2
+{ }
+{ }
+INFORM +
+'ARGV' STO
+ARGV 1 GET 'A0' STO
+ARGV 2 GET 'Ak' STO
+ARGV 3 GET 'Bk' STO
+ARGV 4 GET 'L'  STO
+L 2 GET 'NL' STO @POSITIVE LIMIT
+L 1 GET 'L'  STO @NEGATIVE LIMIT
+ARGV 5 GET 'F0' STO @STORE ORIGINAL FUNCTION
+ARGV 6 GET 'N'  STO @NUMBER OF S's
+
+L NL F0 SQ 'X' „ 'INTX' STO
+A0 SQ 2 * K 1 N Ak SQ Bk SQ + … + 'ERR' STO
+INTX ERR - 'ERR' STO
+"PARA VER EL ERROR ESCRIBA ERR"
+ERR
+
+'ARGV' PURGE
+'A0'   PURGE
+'Ak'   PURGE
+'Bk'   PURGE
+'L'    PURGE
+'F0'   PURGE
+'N'    PURGE
+'NL'   PURGE
+'INTX' PURGE
+
+»

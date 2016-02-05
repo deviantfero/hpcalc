@@ -25,7 +25,7 @@
 			ç ITER
 			´
 				ITER 1 GET 'ITE' STO
-				1 ITE
+				0 ITE
 				FOR i
 					X CENT = 'SUBVAR' STO
 					FUNX SUBVAR SUBST 'EVA' STO		
