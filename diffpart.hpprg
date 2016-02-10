@@ -9,10 +9,10 @@
 "DERIVADA PARCIAL MULTIVARIABLE"
 {
 { "F:" "{'F','G','H'...'Z'}"  }
-{ "VD:" "{'x', 'y', 'z'...'a'}"  }
-{ "VI:" "{'u','v',...'w'}"  }
 { "TVAR:" "if dz/dx then 'z'"  }
 { "DVAR:" "if dz/dx then 'x'"  }
+{ "VD:" "{'x', 'y', 'z'...'a'} excepto tvar"  }
+{ "P:" "{x0, y0, z0 ...}"  }
 }
 { 2 0 }
 { }
@@ -21,22 +21,53 @@ INFORM
 IF
 THEN
   OBJç DROP
-  ç F VD VI TVAR DVAR
+  ç F TVAR DVAR VD POINT
 	´
-		VI SIZE F SIZE
+		VD SIZE 1 + F SIZE
 		IF ==
 		THEN
 			"SUCCESS" MSGBOX
-			F SIZE IDN A STO
+			F SIZE IDN BASE STO
+			{1,1} INDEX STO
+			1 F SIZE		
+			FOR i
+				1 F SIZE
+				FOR j
+					j 1
+					IF ==
+					THEN
+						BASE INDEX F i GET TVAR DERIV PUTI
+						'INDEX' STO 'BASE' STO
+					ELSE
+						BASE INDEX F i GET VD j 1 - GET DERIV PUTI
+						'INDEX' STO 'BASE' STO
+					END
+				NEXT					
+			NEXT
+@---------ENDS BASE----------
+			F SIZE IDN TOPM STO
+			{1,1} 'INDEX' STO			  			
 			1 F SIZE
 			FOR i
-				F i GET 'FX' STO
-			NEXT
+				1 F SIZE
+				FOR j
+					j 1
+					IF ==
+					THEN
+						TOPM INDEX F i GET DVAR DERIV PUTI
+						'INDEX' STO 'TOPM' STO
+					ELSE
+						TOPM INDEX F i GET VD j 1 - GET DERIV PUTI
+						'INDEX' STO 'TOPM' STO
+					END
+				NEXT
+			NEXT			
 		ELSE
-			"NOT ENOUGH VI's" MSGBOX
+			"NOT ENOUGH VD's" MSGBOX
 			BEEP @EXIT THE PROGRAM
 		END
+@--------ENDS TMAT--------
+@--------STARTS EVA-------L
 	ª
-ELSE
 END
 ª
