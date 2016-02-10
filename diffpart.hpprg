@@ -1,0 +1,42 @@
+%%HP: T(0)A(D)F(.);
+@ Argumentos:
+@ Author:
+@ E-mail:
+@ Version:
+@ Created using HPUserEdit 5 [www.unparche.com]
+
+´
+"DERIVADA PARCIAL MULTIVARIABLE"
+{
+{ "F:" "{'F','G','H'...'Z'}"  }
+{ "VD:" "{'x', 'y', 'z'...'a'}"  }
+{ "VI:" "{'u','v',...'w'}"  }
+{ "TVAR:" "if dz/dx then 'z'"  }
+{ "DVAR:" "if dz/dx then 'x'"  }
+}
+{ 2 0 }
+{ }
+{ }
+INFORM
+IF
+THEN
+  OBJç DROP
+  ç F VD VI TVAR DVAR
+	´
+		VI SIZE F SIZE
+		IF ==
+		THEN
+			"SUCCESS" MSGBOX
+			F SIZE IDN A STO
+			1 F SIZE
+			FOR i
+				F i GET 'FX' STO
+			NEXT
+		ELSE
+			"NOT ENOUGH VI's" MSGBOX
+			BEEP @EXIT THE PROGRAM
+		END
+	ª
+ELSE
+END
+ª
