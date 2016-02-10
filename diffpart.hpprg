@@ -11,8 +11,9 @@
 { "F:" "{'F','G','H'...'Z'}"  }
 { "TVAR:" "if dz/dx then 'z'"  }
 { "DVAR:" "if dz/dx then 'x'"  }
-{ "VD:" "{'x', 'y', 'z'...'a'} excepto tvar"  }
-{ "P:" "{x0, y0, z0 ...}"  }
+{ "VD:" "{'x', 'y'...} menos tvar"  }
+{ "AVARS:" "{ 'z'...'w'} !dvar y !tvar"  }
+{ "P:" "{ TVAR, DVAR, x0 .. }"  }
 }
 { 2 0 }
 { }
@@ -21,7 +22,7 @@ INFORM
 IF
 THEN
   OBJç DROP
-  ç F TVAR DVAR VD POINT
+  ç F TVAR DVAR VD AVAR POINT
 	´
 		VD SIZE 1 + F SIZE
 		IF ==
@@ -67,7 +68,71 @@ THEN
 			BEEP @EXIT THE PROGRAM
 		END
 @--------ENDS TMAT--------
-@--------STARTS EVA-------L
+@--------STARTS EVAL------
+		1 F SIZE SQ
+		FOR i
+@------FROM SQ 1 TO 9-----
+			1 POINT SIZE
+			FOR j
+	@-----SUBST EVERY VALUE-----
+				j 1
+				IF ==
+				THEN
+					BASE INDEX GETI 'TEMP' STO
+					TEMP TVAR POINT j GET = SUBST EVAL 'TEMP' STO
+					BASE INDEX TEMP PUTI 'CRAP' STO 'BASE' STO
+				ELSE
+					j 2
+					IF ==
+					THEN
+						BASE INDEX GETI 'TEMP' STO
+						TEMP DVAR POINT j GET = SUBST EVAL 'TEMP' STO
+						BASE INDEX TEMP PUTI 'CRAP' STO 'BASE' STO
+					ELSE
+						BASE INDEX GETI 'TEMP' STO
+						TEMP AVAR j 2 - GET POINT j GET = SUBST EVAL 'TEMP' STO
+						BASE INDEX TEMP PUTI 'CRAP' STO 'BASE' STO
+					END
+				END
+			NEXT @ENDS FOR EVERY VALUE
+			BASE INDEX 1 PUTI 'INDEX' STO 'CRAP' STO @UPDATES INDEX
+		NEXT @ENDS SQ 1 TO 9
+@-----STARTS TMAT---------
+		{1,1} 'INDEX' STO
+		1 F SIZE SQ
+		FOR i
+@------FROM SQ 1 TO 9-----
+			1 POINT SIZE
+			FOR j
+	@-----SUBST EVERY VALUE-----
+				j 1
+				IF ==
+				THEN
+					TOPM INDEX GETI 'TEMP' STO
+					TEMP TVAR POINT j GET = SUBST EVAL 'TEMP' STO
+					TOPM INDEX TEMP PUTI 'CRAP' STO 'TOPM' STO
+				ELSE
+					j 2
+					IF ==
+					THEN
+						TOPM INDEX GETI 'TEMP' STO
+						TEMP DVAR POINT j GET = SUBST EVAL 'TEMP' STO
+						TOPM INDEX TEMP PUTI 'CRAP' STO 'TOPM' STO
+					ELSE
+						TOPM INDEX GETI 'TEMP' STO
+						TEMP AVAR j 2 - GET POINT j GET = SUBST EVAL 'TEMP' STO
+						TOPM INDEX TEMP PUTI 'CRAP' STO 'TOPM' STO
+					END
+				END
+			NEXT @ENDS FOR EVERY VALUE
+			TOPM INDEX 1 PUTI 'INDEX' STO 'CRAP' STO @UPDATES INDEX
+		NEXT @ENDS SQ 1 TO 9
 	ª
+	CLEAR
+	"MATRICES EN TOPM & BASE" MSGBOX
+	TOPM DET BASE DET / NEG
 END
+'INDEX' PURGE
+'TEMP'  PURGE
+'CRAP'  PURGE
 ª
