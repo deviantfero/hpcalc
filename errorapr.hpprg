@@ -1,0 +1,36 @@
+%%HP: T(0)A(D)F(.);
+@ Argumentos:
+@ Author:
+@ E-mail:
+@ Version:
+@ Created using HPUserEdit 5 [www.unparche.com]
+
+´
+"ABSOLUTE AND RELATIVE ERROR"
+{
+"Real Value"
+"Approx Value"
+}
+{ 1 0 }
+{ }
+{ }
+INFORM
+IF
+THEN
+  OBJç DROP
+  ç rv av  
+	´
+		rv av - ABS çNUM 'RERR' STO
+		RERR av / ABS çNUM 'AERR' STO
+		"REAL ERROR: " RERR +
+		SCROLL
+		"APPROX. ERROR: " AERR +
+		SCROLL
+		"APPROX. ERROR 100%: " AERR 100 * +
+		SCROLL
+		'RERR' PURGE
+		'AERR' PURGE
+	ª
+ELSE
+END
+ª
