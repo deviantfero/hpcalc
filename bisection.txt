@@ -1,0 +1,117 @@
+EXPORT fixedP(gx, var, a, b, err)
+BEGIN
+  MSGBOX("fixedP(gx, var, a, b, err)
+Results in M2: |P0 |Pn |err |");
+  //return cas_pf(gx, var, a, b, err);
+END;
+
+EXPORT fixedPo(gx, var, po, err)
+BEGIN
+  MSGBOX("fixedP(gx, var, po, err)
+Results in M2: |P0 |Pn |err |");
+  //return cas_pfpo(gx, var,  po, err);
+END;
+
+EXPORT stffen(gx, var, po, err)
+BEGIN
+  MSGBOX("stffen(gx, var, po, err)
+Results in M3: |a |b |c |Pn |err |");
+  //return cas_steff(gx, var, po, err);
+END;
+
+EXPORT aitken(gx, var, po, err)
+BEGIN
+  MSGBOX("aitken(gx, var, po, err)
+Results in M3: |a |b |c |Pn |err |");
+  //return cas_aitken(gx, var, po, err);
+END;
+
+#cas
+cas_pf(gx, var, a, b, err):=
+BEGIN
+  local dgx, p, lim1, lim2, pant, it;
+  dgx := EVAL(diff(gx, var));
+  lim1 := EVAL(subst(gx, var=a));
+  lim2 := EVAL(subst(gx, var=b));
+  pant := EVAL(RANDOM(a,b));
+  it := 1;
+
+    p := EVAL(subst(gx,var=pant));
+    WHILE ABS(p-pant) > 10^(-err) DO
+      M2(it, 1) := EVAL(pant);
+      M2(it, 2) := EVAL(p);
+      M2(it, 3) := EVAL(ABS(p-pant));
+      pant := p;
+      p := EVAL(subst(gx,var=pant));
+      it := it + 1;
+  END;
+    return p; 
+END;
+
+cas_pfpo(gx, var, po, err):=
+BEGIN
+  local dgx, p, lim1, lim2, pant, it;
+  dgx := EVAL(diff(gx, var));
+  pant := po;
+  it := 1;
+
+    p := EVAL(subst(gx,var=pant));
+    WHILE ABS(p-pant) > 10^(-err) DO
+      M2(it, 1) := EVAL(pant);
+      M2(it, 2) := EVAL(p);
+      M2(it, 3) := EVAL(ABS(p-pant));
+      pant := p;
+      p := EVAL(subst(gx,var=pant));
+      it := it + 1;
+  END;
+    return p; 
+END;
+
+cas_steff(gx, var, po, err):=
+BEGIN
+  local a, b, c, pg, ix;
+  a := po;
+  b := EVAL(subst(gx, var=a));
+  c := EVAL(subst(gx, var=b));
+  pg := EVAL(a - (((b-a)^2)/(c-2*b+a)));
+  ix := 1;
+  WHILE ABS(a-pg) > 10^(-err) DO
+    M3(ix, 1) := EVAL(a);
+    M3(ix, 2) := EVAL(b);
+    M3(ix, 3) := EVAL(c);
+    M3(ix, 4) := EVAL(pg);
+    M3(ix, 5) := EVAL(ABS(a-pg));
+    a := pg;
+    b := EVAL(subst(gx, var=a));
+    c := EVAL(subst(gx, var=b));
+    pg := EVAL(a - (((b-a)^2)/(c-2*b+a)));
+    ix := ix + 1;
+  END;
+  return EVAL(pg);
+END;
+
+cas_aitken(gx, var, po, err):=
+BEGIN
+  local a, b, c, pg, ix;
+  a := po;
+  b := EVAL(subst(gx, var=a));
+  c := EVAL(subst(gx, var=b));
+  pg := EVAL(a - (((b-a)^2)/(c-2*b+a)));
+  ix := 1;
+  WHILE ABS(po-pg) > 10^(-err) DO
+    M3(ix, 1) := EVAL(a);
+    M3(ix, 2) := EVAL(b);
+    M3(ix, 3) := EVAL(c);
+    M3(ix, 4) := EVAL(pg);
+    M3(ix, 5) := EVAL(ABS(a-pg));
+    a := EVAL(subst(gx, var=c));
+    b := EVAL(subst(gx, var=a));
+    c := EVAL(subst(gx, var=b));
+	po := EVAL(pg);
+    pg := EVAL(a - (((b-a)^2)/(c-2*b+a)));
+    ix := ix + 1;
+  END;
+  return EVAL(pg);
+END;
+
+#end
