@@ -1,0 +1,82 @@
+//By  Alejandro Velasco 2016
+
+#cas
+lagrangeInterpolation(listX, listY, pdeg):=
+BEGIN
+  local auxL, polF, i, j;
+  auxL:=1;
+  polF:=0;
+  i:=1;
+  j:=1;
+
+  FOR i FROM 1 TO (pdeg+1) DO
+    auxL:=1; 
+    FOR j FROM 1 TO (pdeg+1) DO
+      IF i != j THEN
+         auxL:=(auxL * (x - listX[j])/(listX[i] - listX[j]));
+      END;
+    END;
+    polF:=(polF + (auxL * listY[i]));
+  END;
+   
+  RETURN expand(polF);
+END;
+
+lagrangeError(funct, listX, interval):=
+BEGIN
+  local ex, gx, i, sizeL, auxF, auxInterval, maxInterval, critsInterval, auxCrits;
+  i:=1; 
+  gx:=1;
+  sizeL:=SIZE(listX);
+  auxF:=funct; 
+  auxInterval:=interval; 
+  auxCrits:=1;
+ 
+  WHILE i <= sizeL DO
+    auxF:=diff(auxF,x);
+    i:=i+1; 
+  END;  
+  
+  IF size(solve(diff(auxF,x)=0,x)) > 0 THEN
+     auxInterval:=append(auxInterval,solve(diff(auxF)=0,x)); 
+  END;
+  
+  i:=1;
+  maxInterval:=[];
+  WHILE i <= SIZE(auxInterval) DO
+    maxInterval:=append(maxInterval,abs(subst(auxF,x=auxInterval[i])));
+    i:=i+1; 
+  END;
+  PRINT(auxInterval);
+  PRINT(maxInterval);
+  IF size(interval) > 1 THEN
+    //building g(x)
+    i:=1;
+    WHILE i <= sizeL DO
+      gx:=gx*(x-listX[i]);
+      i:=i+1;
+    END; 
+    critsInterval:=solve(diff(gx,x)=0,x); 
+
+    i:=1;
+    auxCrits:=[];
+    
+    WHILE i <= size(critsInterval) DO
+      auxCrits:=append(auxCrits, abs(subst(gx,x=critsInterval[i])));
+      i:=i+1;
+    END; 
+  END;
+  
+  RETURN max(auxCrits)*max(maxInterval)/factorial(sizeL); 
+END;
+#end
+
+EXPORT LagrangeInterpolation(ListX, ListY, pdeg)
+BEGIN
+  RETURN lagrangeInterpolation(ListX, ListY, pdeg);
+END;
+
+EXPORT LagrangeError(funct, ListX, interval)
+BEGIN
+  RETURN lagrangeError(funct, ListX, interval); 
+END;

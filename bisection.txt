@@ -1,31 +1,3 @@
-EXPORT fixedP(gx, var, a, b, err)
-BEGIN
-  MSGBOX("fixedP(gx, var, a, b, err)
-Results in M2: |P0 |Pn |err |");
-  //return cas_pf(gx, var, a, b, err);
-END;
-
-EXPORT fixedPo(gx, var, po, err)
-BEGIN
-  MSGBOX("fixedP(gx, var, po, err)
-Results in M2: |P0 |Pn |err |");
-  //return cas_pfpo(gx, var,  po, err);
-END;
-
-EXPORT stffen(gx, var, po, err)
-BEGIN
-  MSGBOX("stffen(gx, var, po, err)
-Results in M3: |a |b |c |Pn |err |");
-  //return cas_steff(gx, var, po, err);
-END;
-
-EXPORT aitken(gx, var, po, err)
-BEGIN
-  MSGBOX("aitken(gx, var, po, err)
-Results in M3: |a |b |c |Pn |err |");
-  //return cas_aitken(gx, var, po, err);
-END;
-
 #cas
 cas_pf(gx, var, a, b, err):=
 BEGIN
@@ -115,3 +87,31 @@ BEGIN
 END;
 
 #end
+
+EXPORT fixedP(gx, var, a, b, err)
+BEGIN
+  MSGBOX("fixedP(gx, var, a, b, err)
+Results in M2: |P0 |Pn |err |");
+  return cas_pf(gx, var, a, b, err);
+END;
+
+EXPORT fixedPo(gx, var, po, err)
+BEGIN
+  MSGBOX("fixedP(gx, var, po, err)
+Results in M2: |P0 |Pn |err |");
+  return cas_pfpo(gx, var,  po, err);
+END;
+
+EXPORT stffen(gx, var, po, err)
+BEGIN
+  MSGBOX("stffen(gx, var, po, err)
+Results in M3: |a |b |c |Pn |err |");
+  return cas_steff(gx, var, po, err);
+END;
+
+EXPORT aitken(gx, var, po, err)
+BEGIN
+  MSGBOX("aitken(gx, var, po, err)
+Results in M3: |a |b |c |Pn |err |");
+  return cas_aitken(gx, var, po, err);
+END;
