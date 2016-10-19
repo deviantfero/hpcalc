@@ -1,0 +1,55 @@
+#cas
+cas_leastsq(fa, px, py, var):=
+BEGIN
+  local qa, qtmp, ma, mf, i, j, fy, pans;
+
+  qa := []; ma := []; qtmp := []; mf := []; fy := [];
+  pans := 0;
+
+  IF size(px) <> size(py) THEN
+    IF size(py) == 1 THEN
+      MSGBOX("Evaluating on f(x) to get y's");
+      FOR i FROM 1 TO size(px) DO
+        fy := CONCAT( fy, EVAL(subst(py, var=px(i))) );
+      END;
+      py := fy;
+    END;
+    return 0;
+  END;
+
+  //filling Qs
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(px) DO
+      qtmp := CONCAT( qtmp, EVAL(subst(fa(i), var=px(j))) );
+    END;
+    qa := CONCAT( qa, qtmp );
+    qtmp := []
+  END;
+
+  //converting to matrix
+  qa := list2mat(qa, size(px));
+
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(fa) DO
+      ma := CONCAT( ma, qa(j)*qa(i) );
+    END;
+    mf := CONCAT( mf, qa(i)*py );
+  END;
+
+  ma := list2mat(ma, size(fa));
+  ADDCOL(ma, mf, size(fa) + 1);
+  ma := RREF(ma);
+
+  FOR i FROM 1 TO size(fa) DO
+    pans := pans + fa(i)*ma[i][size(fa)+1];
+  END;
+
+  return pans;
+
+END;
+#end
+
+EXPORT leastsq(fa, px, py, var)
+BEGIN
+  return cas_leastsq(fa, px, py, var);
+END;
