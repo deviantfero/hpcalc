@@ -1,0 +1,32 @@
+hp= LagrangeInterpolation({x},{y}, grado polinomio)
+LagrangeError(fx, {x},{intervalo})
+NOTA: {x} {y} {intervalo} son listas
+
+Polinomio Interpolado de Lagrange-Para estos casos se nos otrogara un f(x) y una serie de puntos x a los que llamremos P, (P0, P1, ...Pn), necesitaremos tambien las Y ó f(P...Pn) loq ue nos dara una lsita de Ys correspondiente, se busca un polinomio.
+
+Entonces el polinomio Interpolado sera: L0*f(P0)+L1*F(P1)....Ln*f(Pn)
+
+Por cada Ln, se calcula de la siguiente manera: 
+Ln=(x-pn)(x-Pn+1)....(x-Pn+n)/(Pn-Pn+1)(Pn-Pn+2)...(Pn-Pn+n)
+
+es decir, arriba a x se le restan todos los P cuya n no corresponde a la de L, y abajo a Pn se le restan todos los demas, por ejemplo: P0=1, P1=3, P=5, f(x)=x+2
+
+L0=(x-3)(x-5)/(1-3)(1-5)
+L1=(x-1)(x-5)/(3-1)(3-5)
+L2=(x-1)(x-3)/(5-1)(5-3)
+
+El polinomio seria: L0*f(1) + L1*f(3) + L2*f(5)
+
+*Para obtener el error en un punto con lagrange se utiliza la siguiente formula:
+
+f^(derivada n, donde n es cantidad de puntos)
+
+(f^($(x))/(n+1)!)*|(x-P0)....(x-Pn)|
+
+donde f^($(x)) es la enesima derivada evaluada en el x que la maximisa de la funcion original de x y n es la cantidad de puntos contados desde 0 y en |(x-P0)...(x-Pn)| sustituimos la x con el ppunto del cual queremos halalr el error
+NOTA: si nos se puede maximizar f^($(x)), evaluar en los extremos, osea P0 o Pn y utilizar el mayor resultado de dicha evaluacion.
+
+*Tambien existe la posibilidad de que nos pidan el error en un intervalo en cual caso, la formula sera la misma= 
+(f^($(x))/(n+1)!)*|(x-P0)....(x-Pn)|
+
+excepto que como no hay un valor de x que sustituir se intentara maximizar |(x-P0)....(x-Pn)| derivando e igualando a 0, si no se encuentra solucion se prueba en los extremos de los intervalos y el mayor valor absoluto sera el valor que sustituya a |(x-P0)....(x-Pn)| en la formula.

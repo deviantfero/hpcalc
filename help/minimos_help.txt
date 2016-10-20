@@ -1,0 +1,43 @@
+MINIMOS CUADRADOS
+
+nota: Si alguna de las funciones da error de argumento, se arregla llamandola con su nombre cas, es decir por ejemplo si nos fallo el caso continuo, utilizariamos cas_continuo(...)
+
+funciones en HP
+
+-----> continuo( [fa], [rango], fx ) //solo funciona con funciones en x
+
+-----> discreto( [fa], [x], [y], var )
+
+[fa] son los terminos que esperamos, si nos dicen de grado uno la f*(x) se veria algo asi:
+
+f* = q0 + q1*x
+
+por lo cual nuestro [fa] seria, [1 x], en las [x] se ponen todos los puntos en x dados en forma de una lista con corchetes y en las [y] de la misma manera se ponen todas las 'y' correspondientesi, si no se da una lista de valores en y, si no que se otorga una f(x), tambien se puede utilizar de la siguiente manera:
+
+discreto( [fx], [x], fy, var )
+
+nos devolvera el polinomio sacado por minimos cuadrados y nos pondra la matriz en M8 las matrices de producto interno para hallar esos C de la f* (que ya no sera necesaria la tabla pues ya tenemos el polinomio,sin embargo puede servir de procedimiento)
+
+esta tiene la siguiente forma, donde (a,b) es el producto escalar( punto ) de los vectores a y b
+
+c0*(q0,q0) c1*(q0,q1)...Cn(q0, qn) = (f*,q0)
+c0*(q1,q0) c1*(q1,q1)...Cn(q1, qn) = (f*,q1)
+.   .		 .   .		  .   .
+.   .		 .   .		  .   .
+.   .		 .   .		  .   .
+c0*(qn,q0) c1*(qn,q1)...Cn(qn, qn) = (f*,qn)
+
+como se arman los vectores q? con nuestra lista [fa] podemos deducirlos
+
+si
+[fa] = [1 x] entonces q0 sera un vector lleno de 1's del tamaño de la cantidad de puntos que tenemos en x
+
+q1 serian todas las [x] evaluadas en X de f*
+
+tambien en el caso discreto esto puede ser visto como
+
+sum(1)  sum(x)  ... sum(x^n) = sum(1*f(x))
+sum(x)  sum(x^2)  ... sum(x^n) = sum(x*f(x))
+
+donde sum representa la sumatoria de todos los valores dentro de los vectores
+
