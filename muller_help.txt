@@ -1,0 +1,41 @@
+MULLER
+funcion en hpprime:
+
+muller(fx, {puntos}, var, err)
+
+si nos piden un error de 10^-3 en el error ira solamente un 3
+
+resultado:
+el punto en que la funcion se hace 0
+en M1 se guardara lo siguiente en este orden:
+
+|  p0  |  p1  |  p2  |  a   |  b  |  c   |  p3 |
+
+en muller se nos da un f(x) y necesitaremos o nos daran 3 puntos, si se necesitan sacar, se puede utilizar la funcion solve() de la calculadora para tener una idea de que puntos agarrar para realizar muller, estos puntos se denominaran p0, p1, p2, tambien se nos dara una tolerancia o error, por ejemplo 10^-3, el objetivo de este metodo es encontrar la raiz en que la f(x) se hace 0.
+
+para esto necesitaremos sacar un p3, que se vaya aproximando a la solucion con la siguiente formula:
+
+p3 = p2 - (2*c)/(b+sgn(b)*sqrt(b^2-4*a*c))
+
+luego se sustituyen los p0...p2 originales, de la siguiente manera:
+
+p0 = p1
+p1 = p2
+p2 = p3
+
+Pero antes de poder hacer esto, ¿Como obtenemos a, b y c?
+
+h1 = p1 - p0
+h2 = p2 - p1
+d1 = ( f(p1) - f(p0) )/h1
+d1 = ( f(p2) - f(p1) )/h2
+
+a = ( d2 - d1 )/( h2 + h1 )
+b = d2 + h2*a
+c = f(p2)
+
+ahora:
+
+p3 = p2 - (2*c)/(b+sgn(b)*sqrt(b^2-4*a*c))
+
+y repetimos para todas las iteraciones necesarias

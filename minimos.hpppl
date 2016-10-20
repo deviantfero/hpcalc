@@ -1,5 +1,5 @@
 #cas
-cas_leastsq(fa, px, py, var):=
+cas_discreto(fa, px, py, var):=
 BEGIN
   local qa, qtmp, ma, mf, i, j, fy, pans;
 
@@ -47,9 +47,48 @@ BEGIN
   return pans;
 
 END;
+
+cas_continuo(fa, px, fx):=
+BEGIN
+  local qa, qtmp, mf, i, j, pans, tmp;
+
+  qa := []; qtmp := []; mf := [];
+  pans := 0; tmp := 0;
+
+  //filling Qs
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(fa) DO
+      tmp := int(fa(i)*fa(j),x,px(1),px(2));
+      qtmp := CONCAT( qtmp, tmp);
+    END;
+    qa := CONCAT( qa, qtmp );
+    tmp := int(fa(i)*fx,x,px(1),px(2));
+    mf := CONCAT(mf, tmp );
+    qtmp := []
+  END;
+
+  //converting to matrix
+  qa := list2mat(qa, size(fa));
+
+  ADDCOL(qa, mf, size(fa) + 1);
+  qa := RREF(qa);
+  print(qa);
+
+  FOR i FROM 1 TO size(fa) DO
+    pans := pans + fa(i)*qa[i][size(fa)+1];
+  END;
+
+  return expand(approx(pans));
+
+END;
 #end
 
-EXPORT leastsq(fa, px, py, var)
+EXPORT discreto(fa, px, py, var)
 BEGIN
-  return cas_leastsq(fa, px, py, var);
+  return cas_discreto(fa, px, py, var);
+END;
+
+EXPORT continuo(fa, px, fx)
+BEGIN
+  return cas_continuo(fa, px, fx);
 END;
