@@ -1,20 +1,28 @@
 #cas
-cas_discreto(fa, px, py, var):=
+cas_discreto(fa, lx, ly, var):=
 BEGIN
-  local qa, qtmp, ma, mf, i, j, fy, pans;
+  local qa, qtmp, ma, mf, i, j, fy, pans, px, py;
 
   qa := []; ma := []; qtmp := []; mf := []; fy := [];
-  pans := 0;
+  pans := 0; py:=[]; px:=[];
 
   PRINT("M8 holds the unsolved matrix for procedure");
-  IF size(px) <> size(py) THEN
-    IF size(py) == 1 THEN
-      FOR i FROM 1 TO size(px) DO
-        fy := CONCAT( fy, EVAL(subst(py, var=px(i))) );
+  IF size(lx) <> size(ly) THEN
+    IF size(ly) == 1 THEN
+      FOR i FROM 1 TO size(lx) DO
+        fy := CONCAT( fy, EVAL(subst(ly, var=lx(i))) );
       END;
       py := fy;
     END;
     return 0;
+  ELSE
+    FOR i FROM 1 TO size(lx) DO
+      py := CONCAT(py, ly(i));
+    END;
+  END;
+
+  FOR i FROM 1 TO size(lx) DO
+    px := CONCAT(px, lx(i));
   END;
 
   //filling Qs
@@ -54,30 +62,36 @@ END;
 
 //caso Exponencial discreto
 
-cas_discretoexp(fa, px, py, var):=
+cas_discretoexp(fa, lx, ly, var):=
 BEGIN
   local qa, qtmp, ma, mf, i, j, fy, pans;
 
   qa := []; ma := []; qtmp := []; mf := []; fy := [];
-  pans := 0;
+  pans := 0; py:=[]; px:=[];
 
   PRINT("M8 holds the unsolved matrix for procedure");
-  IF size(px) <> size(py) THEN
-    IF size(py) == 1 THEN
-      FOR i FROM 1 TO size(px) DO
-        fy := CONCAT( fy, EVAL(subst(ln(py), var=px(i))) );
+  IF size(lx) <> size(ly) THEN
+    IF size(ly) == 1 THEN
+      FOR i FROM 1 TO size(lx) DO
+        fy := CONCAT( fy, EVAL(subst(ln(ly), var=lx(i))) );
       END;
       py := fy;
     END;
     return 0;
-  END;
-
-  IF size(px) == size(py) THEN
-    FOR i FROM 1 TO size(py) DO
-      qtmp := CONCAT(qtmp, ln(py(i)) );
+  ELSE
+    FOR i FROM 1 TO size(ly) DO
+      qtmp := CONCAT(qtmp, ln(ly(i)) );
     END;
   END;
+
   py := qtmp;
+  qtmp := [];
+
+  FOR i FROM 1 TO size(lx) DO
+    qtmp := CONCAT(qtmp, lx(i) );
+  END;
+
+  px := qtmp;
   qtmp := [];
 
   //filling Qs
@@ -116,16 +130,20 @@ BEGIN
 END;
 
 
-cas_continuo(fa, px, fx):=
+cas_continuo(fa, lx, fx):=
 BEGIN
-  local qa, qtmp, mf, i, j, pans, tmp;
+  local qa, qtmp, mf, i, j, pans, tmp, px;
 
   qa := []; qtmp := []; mf := [];
-  pans := 0; tmp := 0;
+  pans := 0; tmp := 0; px:=[];
 
   PRINT("M8 holds the unsolved matrix for procedure");
 
   //filling Qs
+  FOR i FROM 1 TO size(lx) DO
+    px := CONCAT(px, lx(i));
+  END;
+
   FOR i FROM 1 TO size(fa) DO
     FOR j FROM 1 TO size(fa) DO
       tmp := int(fa(i)*fa(j),x,px(1),px(2));
@@ -157,12 +175,16 @@ BEGIN
 END;
 
 //caso continuo EXP
-cas_continuoexp(fa, px, fx):=
+cas_continuoexp(fa, lx, fx):=
 BEGIN
-  local qa, qtmp, mf, i, j, pans, tmp;
+  local qa, qtmp, mf, i, j, pans, tmp, px;
 
   qa := []; qtmp := []; mf := [];
-  pans := 0; tmp := 0;
+  pans := 0; tmp := 0; px:=[];
+
+  FOR i FROM 1 TO size(lx) DO
+    px := CONCAT(px, lx(i));
+  END;
 
   PRINT("M8 holds the unsolved matrix for procedure");
 
@@ -199,22 +221,22 @@ BEGIN
 END;
 #end
 
-EXPORT discreto(fa, px, py, var)
+EXPORT discreto(fa, lx, ly, var)
 BEGIN
-  return cas_discreto(fa, px, py, var);
+  return cas_discreto(fa, lx, ly, var);
 END;
 
-EXPORT discretoexp(fa, px, py, var)
+EXPORT discretoexp(fa, lx, ly, var)
 BEGIN
-  return cas_discretoexp(fa, px, py, var);
+  return cas_discretoexp(fa, lx, ly, var);
 END;
 
-EXPORT continuo(fa, px, fx)
+EXPORT continuo(fa, lx, fx)
 BEGIN
-  return cas_continuo(fa, px, fx);
+  return cas_continuo(fa, lx, fx);
 END;
 
-EXPORT continuoexp(fa, px, fx)
+EXPORT continuoexp(fa, lx, fx)
 BEGIN
-  return cas_continuoexp(fa, px, fx);
+  return cas_continuoexp(fa, lx, fx);
 END;
