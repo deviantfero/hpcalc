@@ -32,10 +32,10 @@ BEGIN
   FOR i FROM 1 TO size(fa) DO
     FOR j FROM 1 TO size(fa) DO
       ma := CONCAT( ma, qa(i)*qa(j) );
-      M8(j,i) := EVAL(qa(i)*qa(j));
+      M8(j,i) := approx(EVAL(qa(i)*qa(j)));
     END;
     mf := CONCAT( mf, qa(i)*py );
-    M8(i,size(fa)+1) := EVAL(qa(i)*py);
+    M8(i,size(fa)+1) := approx(EVAL(qa(i)*py));
   END;
 
   ma := list2mat(ma, size(fa));
@@ -43,12 +43,78 @@ BEGIN
   ma := RREF(ma);
 
   FOR i FROM 1 TO size(fa) DO
+    qtmp := CONCAT(qtmp, ma[i][size(fa)+1])
     pans := pans + fa(i)*ma[i][size(fa)+1];
   END;
 
+  PRINT("Cn in order:\n"+ qtmp);
   return pans;
 
 END;
+
+//caso Exponencial discreto
+
+cas_discretoexp(fa, px, py, var):=
+BEGIN
+  local qa, qtmp, ma, mf, i, j, fy, pans;
+
+  qa := []; ma := []; qtmp := []; mf := []; fy := [];
+  pans := 0;
+
+  PRINT("M8 holds the unsolved matrix for procedure");
+  IF size(px) <> size(py) THEN
+    IF size(py) == 1 THEN
+      FOR i FROM 1 TO size(px) DO
+        fy := CONCAT( fy, EVAL(subst(ln(py), var=px(i))) );
+      END;
+      py := fy;
+    END;
+    return 0;
+  END;
+
+  IF size(px) == size(py) THEN
+    FOR i FROM 1 TO size(py) DO
+      qtmp := CONCAT(qtmp, ln(py(i)) );
+    END;
+  END;
+  py := qtmp;
+  qtmp := [];
+
+  //filling Qs
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(px) DO
+      qtmp := CONCAT( qtmp, EVAL(subst(fa(i), var=px(j))) );
+    END;
+    qa := CONCAT( qa, qtmp );
+    qtmp := []
+  END;
+
+  //converting to matrix
+  qa := list2mat(qa, size(px));
+
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(fa) DO
+      ma := CONCAT( ma, qa(i)*qa(j) );
+      M8(j,i) := approx(EVAL(qa(i)*qa(j)));
+    END;
+    mf := CONCAT( mf, qa(i)*py );
+    M8(i,size(fa)+1) := approx(EVAL(qa(i)*py));
+  END;
+
+  ma := list2mat(ma, size(fa));
+  ADDCOL(ma, mf, size(fa) + 1);
+  ma := RREF(ma);
+
+  FOR i FROM 1 TO size(fa) DO
+    qtmp := CONCAT(qtmp, ma[i][size(fa)+1])
+    pans := pans + fa(i)*ma[i][size(fa)+1];
+  END;
+
+  PRINT("Cn in order:\n" + qtmp);
+  return EXP(pans);
+
+END;
+
 
 cas_continuo(fa, px, fx):=
 BEGIN
@@ -64,12 +130,12 @@ BEGIN
     FOR j FROM 1 TO size(fa) DO
       tmp := int(fa(i)*fa(j),x,px(1),px(2));
       qtmp := CONCAT( qtmp, tmp);
-      M8(j,i) := EVAL(tmp);
+      M8(j,i) := approx(EVAL(tmp));
     END;
     qa := CONCAT( qa, qtmp );
     tmp := int(fa(i)*fx,x,px(1),px(2));
     mf := CONCAT(mf, tmp );
-    M8(i, size(fa)+1) := EVAL(tmp);
+    M8(i, size(fa)+1) := approx(EVAL(tmp));
     qtmp := []
   END;
 
@@ -77,15 +143,58 @@ BEGIN
   qa := list2mat(qa, size(fa));
 
   ADDCOL(qa, mf, size(fa) + 1);
-  //ADDCOL(M8, mf, size(fa) + 1);
   qa := RREF(qa);
   print(qa);
 
   FOR i FROM 1 TO size(fa) DO
+    qtmp := CONCAT(qtmp, qa[i][size(fa)+1])
     pans := pans + fa(i)*qa[i][size(fa)+1];
   END;
 
+  PRINT("Cn in order:\n" + qtmp);
   return expand(approx(pans));
+
+END;
+
+//caso continuo EXP
+cas_continuoexp(fa, px, fx):=
+BEGIN
+  local qa, qtmp, mf, i, j, pans, tmp;
+
+  qa := []; qtmp := []; mf := [];
+  pans := 0; tmp := 0;
+
+  PRINT("M8 holds the unsolved matrix for procedure");
+
+  //filling Qs
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(fa) DO
+      tmp := int(fa(i)*fa(j),x,px(1),px(2));
+      qtmp := CONCAT( qtmp, tmp);
+      M8(j,i) := approx(EVAL(tmp));
+    END;
+    qa := CONCAT( qa, qtmp );
+    tmp := int(fa(i)*ln(fx),x,px(1),px(2));
+    mf := CONCAT(mf, tmp );
+    M8(i, size(fa)+1) := approx(EVAL(tmp));
+    qtmp := []
+  END;
+
+  //converting to matrix
+  qa := list2mat(qa, size(fa));
+
+  ADDCOL(qa, mf, size(fa) + 1);
+  qa := RREF(qa);
+  print(qa);
+
+  FOR i FROM 1 TO size(fa) DO
+    qtmp := CONCAT(qtmp, qa[i][size(fa)+1])
+    pans := pans + fa(i)*qa[i][size(fa)+1];
+  END;
+
+  PRINT("Cn in order:\n" + qtmp);
+
+  return EXP(expand(approx(pans)));
 
 END;
 #end
@@ -95,7 +204,17 @@ BEGIN
   return cas_discreto(fa, px, py, var);
 END;
 
+EXPORT discretoexp(fa, px, py, var)
+BEGIN
+  return cas_discretoexp(fa, px, py, var);
+END;
+
 EXPORT continuo(fa, px, fx)
 BEGIN
   return cas_continuo(fa, px, fx);
+END;
+
+EXPORT continuoexp(fa, px, fx)
+BEGIN
+  return cas_continuoexp(fa, px, fx);
 END;

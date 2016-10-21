@@ -1,7 +1,7 @@
-//By  Alejandro Velasco 2016
+//By Alejandro Velasco 2016
 
 #cas
-lagrangeInterpolation(listX, listY, pdeg):=
+lagrangeInterpolation(listX, listY, limit):=
 BEGIN
   local auxL, polF, i, j;
   auxL:=1;
@@ -9,67 +9,140 @@ BEGIN
   i:=1;
   j:=1;
 
-  FOR i FROM 1 TO (pdeg+1) DO
-    auxL:=1; 
-    FOR j FROM 1 TO (pdeg+1) DO
+  FOR i FROM 1 TO limit+1 DO
+    auxL:=1;
+    FOR j FROM 1 TO limit+1 DO
       IF i != j THEN
          auxL:=(auxL * (x - listX[j])/(listX[i] - listX[j]));
       END;
     END;
+    PRINT(auxL*listY[i]);
     polF:=(polF + (auxL * listY[i]));
   END;
-   
-  RETURN expand(polF);
+
+  RETURN simplify(expand(polF));
 END;
 
 lagrangeError(funct, listX, interval):=
 BEGIN
-  local ex, gx, i, sizeL, auxF, auxInterval, maxInterval, critsInterval, auxCrits;
-  i:=1; 
+  local ex, gx, i, newInterval, sizeL, auxF, auxInterval, maxInterval, critsInterval, auxCrits;
+  i:=1;
   gx:=1;
   sizeL:=SIZE(listX);
-  auxF:=funct; 
-  auxInterval:=interval; 
-  auxCrits:=1;
- 
+  auxF:=funct;
+  auxInterval:=interval;
+  auxCrits:=[1];
+
+ newInterval:=[];
+
   WHILE i <= sizeL DO
-    auxF:=diff(auxF,x);
-    i:=i+1; 
-  END;  
-  
-  IF size(solve(diff(auxF,x)=0,x)) > 0 THEN
-     auxInterval:=append(auxInterval,solve(diff(auxF)=0,x)); 
+    auxF:=simplify(diff(auxF,x));
+    i:=i+1;
   END;
-  
+
+  IF size(interval) > 1 THEN
+    newInterval:=concat(newInterval, interval);
+
+    IF size(fsolve(diff(auxF,x)=0, x, newInterval)) > 0 THEN
+     auxInterval:=concat(auxInterval,fsolve(diff(auxF)=0,x, newInterval));
+    END;
+  ELSE
+    IF size(fsolve(diff(auxF,x)=0, x)) > 0 THEN
+     auxInterval:=concat(auxInterval,fsolve(diff(auxF)=0,x));
+    END;
+  END;
+
+  PRINT("F(n+1): " + auxF);
+  PRINT("Puntos Críticos: " + auxInterval);
   i:=1;
   maxInterval:=[];
-  WHILE i <= SIZE(auxInterval) DO
-    maxInterval:=append(maxInterval,abs(subst(auxF,x=auxInterval[i])));
-    i:=i+1; 
-  END;
-  PRINT(auxInterval);
-  PRINT(maxInterval);
-  IF size(interval) > 1 THEN
-    //building g(x)
-    i:=1;
-    WHILE i <= sizeL DO
-      gx:=gx*(x-listX[i]);
-      i:=i+1;
-    END; 
-    critsInterval:=solve(diff(gx,x)=0,x); 
 
+  WHILE i <= SIZE(auxInterval) DO
+    maxInterval:=concat(maxInterval,abs(subst(auxF,x=auxInterval[i])));
+    i:=i+1;
+  END;
+
+  //building g(x)
+  i:=1;
+  WHILE i <= sizeL DO
+    gx:=gx*(x-listX[i]);
+    i:=i+1;
+  END;
+
+  PRINT("Puntos Evaluados: " + maxInterval);
+  IF size(interval) > 1 THEN
+    critsInterval:=fsolve(diff(gx,x)=0, x, newInterval);
+
+    PRINT("Críticos de gx: " + critsInterval);
     i:=1;
     auxCrits:=[];
-    
+
     WHILE i <= size(critsInterval) DO
-      auxCrits:=append(auxCrits, abs(subst(gx,x=critsInterval[i])));
+      auxCrits:=concat(auxCrits, abs(subst(gx,x=critsInterval[i])));
       i:=i+1;
-    END; 
+    END;
+    PRINT("Críticos evaluados en gx: " + auxCrits);
+  ELSE
+     auxCrits:=subst(gx,x=interval);
+  END;
+
+  RETURN max(auxCrits)*max(maxInterval)/factorial(sizeL);
+END;
+
+dividedDifferences(listX, listY):=
+BEGIN
+  local i, j, aux, pol, auxDeg, auxpos, auxpos2;
+  i:=1;
+  j:=1;
+  aux:=0;
+  pol:=listY[1];
+  auxDeg:=1;
+  auxpos2:=j+1;
+  auxpos:=j+2;
+
+  
+  FOR i FROM 1 TO 2 DO
+    FOR j FROM 1 TO size(listX) DO
+      CASE
+        IF i==1 THEN M7(j,i):=approx(listX[j]) END;
+        IF i==2 THEN M7(j,i):=approx(listY[j]) END;
+       END;
+    END;
+  END;
+
+  FOR i FROM 1 to size(listX)-1 DO
+     FOR j FROM 1 to i DO
+        aux:=(M7(i+1,j+1)-M7(i,j+1))/(listX[i+1]-listX[i+1-j]);
+        //PRINT(aux);
+        M7(i+1,j+2):=eval(aux);
+     END;
+  END;
+
+  //building the polynomial
+  FOR i FROM 1 to size(listX)-1 DO
+    auxDeg:=1;
+    FOR j FROM 1 to i DO
+      IF i==j THEN
+         auxpos:=eval(j+2);
+         auxpos2:=eval(j+1);
+         //PRINT(auxpos);
+         PRINT(M7(auxpos2,auxpos));
+         auxDeg:=M7(auxpos2,auxpos)*auxDeg;
+      END;
+      auxDeg:=(auxDeg*(x-listX[j]));
+    END;
+    pol:=pol + auxDeg;
+    //PRINT(auxDeg)
   END;
   
-  RETURN max(auxCrits)*max(maxInterval)/factorial(sizeL); 
+  return simplify(expand(pol));
 END;
 #end
+
+EXPORT NewtonsInterpolation(ListX, ListY)
+BEGIN
+  return dividedDifferences(ListX, ListY);
+END;
 
 EXPORT LagrangeInterpolation(ListX, ListY, pdeg)
 BEGIN
@@ -78,5 +151,5 @@ END;
 
 EXPORT LagrangeError(funct, ListX, interval)
 BEGIN
-  RETURN lagrangeError(funct, ListX, interval); 
+  RETURN lagrangeError(funct, ListX, interval);
 END;

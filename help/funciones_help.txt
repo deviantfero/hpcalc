@@ -1,0 +1,58 @@
+MULLER <------
+
+muller(fx, puntos, var, err)
+|
+ ->Devuelve un numero
+
+MINIMOS <-----
+
+py puede ser una funcion para evaluar las x o una serie de puntos en y
+
+discreto([fa], [px], [py], var)
+|
+ -> Retorna un polinomio, Imprime los coeficientes Cn y plasma en M8 la matriz con la que se llego a este resultado
+
+---------------------------
+
+discretoexp([fa], [px], [py], var)
+|
+ -> Retorna un polinomio, Imprime los coeficientes Cn y plasma en M8 la matriz con la que se llego a este resultado
+
+----------------------------
+
+[px] -> un rango, una lista con 2 elementos
+
+continuo([fa], [px], fx)
+|
+ -> Retorna un polinomio, Imprime los coeficientes Cn y plasma en M8 la matriz con la que se llego a este resultado
+
+----------------------------
+
+continuoexp([fa], [px], fx)
+|
+ -> Retorna un polinomio, Imprime los coeficientes Cn y plasma en M8 la matriz con la que se llego a este resultado
+
+
+----------------------------
+
+INTERPOLACION <------
+
+lagrangeInterpolation({listX}, {listY}, limit)
+|
+ -> retorna un polinomio de grado limit
+
+----------------------------
+
+lagrangeError( fx, {listX}, {interval} )
+|
+ -> retorna el error de lagrange dependiendo de cuantos numeros halla en intervalo si hay solo uno, retorna el error en el punto, si hay 2 retorna el error en el intervalo
+
+NewtonsInterpolation({listX}, {listY})
+|
+ -> retorna un polinomio 
+
+ FOURIER <-----------
+
+ todolodefourier(fx,periodo,centro)
+
+ ErrorCuadratico(fx,periodo,centro,nval)
