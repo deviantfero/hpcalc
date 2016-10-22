@@ -1,8 +1,9 @@
 MULLER <------
 
-muller(fx, puntos, var, err)
+muller(fx, {puntos}, var, err)
 |
  ->Devuelve un numero
+Iteraciones en M1
 
 MINIMOS <-----
 
@@ -16,7 +17,7 @@ discreto([fa], [px], [py], var)
 
 discretoexp([fa], [px], [py], var)
 |
- -> Retorna un polinomio, Imprime los coeficientes Cn y plasma en M8 la matriz con la que se llego a este resultado
+ -> Retorna un euler elevado al polinomio, Imprime los coeficientes Cn y plasma en M8 la matriz con la que se llego a este resultado
 
 ----------------------------
 
@@ -30,7 +31,7 @@ continuo([fa], [px], fx)
 
 continuoexp([fa], [px], fx)
 |
- -> Retorna un polinomio, Imprime los coeficientes Cn y plasma en M8 la matriz con la que se llego a este resultado
+ -> Retorna un euler elevado al polinomio, Imprime los coeficientes Cn y plasma en M8 la matriz con la que se llego a este resultado
 
 
 ----------------------------
@@ -50,6 +51,7 @@ lagrangeError( fx, {listX}, {interval} )
 NewtonsInterpolation({listX}, {listY})
 |
  -> retorna un polinomio 
+ tabla en M7
 
  FOURIER <-----------
 
