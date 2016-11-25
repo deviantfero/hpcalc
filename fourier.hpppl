@@ -1,6 +1,5 @@
-
 #cas
-fourierCoefs(funct,period,center):=
+cas_CoeficientesFourier(funct,period,center):=
 BEGIN
   local a0, ak, bk, lran;
   lran:= period/2;
@@ -9,6 +8,20 @@ BEGIN
   bk:=(1/lran)*int(funct*SIN((k*π*x)/lran), x, -lran + center, lran + center);
   
   return a0, ak, bk;
+END;
+
+cas_PolinomioFourier(funct, period, center, ord):=
+BEGIN
+  local tf, pol, term1, term2;
+  tf := [];
+  pol := 0;
+  tf := cas_CoeficientesFourier(funct, period, center); 
+  a0 := approx(tf(1));
+  term1 := tf(2)*cos((k*π*x/(period/2)));
+  term2 := tf(3)*sin((k*π*x/(period/2)));
+  suma := sum(term1 + term2,k,0,ord,1);
+  PRINT(pol);
+  return a0 + approx(suma);
 END;
 
 fourierPar(funct,period,center):=
@@ -69,7 +82,12 @@ END;
 
 EXPORT CoeficientesFourier(fun,per,cent)
 BEGIN
-  fourierCoefs(fun,per,cent);
+  cas_CoeficientesFourier(fun,per,cent);
+END;
+
+EXPORT PolinomioFourier(fun,per,cent, ord)
+BEGIN
+  cas_PolinomioFourier(fun,per,cent, ord);
 END;
 
 EXPORT FourierPar(fun,per,cent)

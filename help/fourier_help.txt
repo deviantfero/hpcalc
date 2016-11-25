@@ -1,0 +1,34 @@
+FOURIER
+
+funciones en hp prime:
+
+CoeficientesFourier(funct, period, center)
+Retorna a0, ak, bk
+
+PolinomioFourier(funct, period, center, ord)
+Retorna polinomio fourier grado ord
+
+-----------------------
+OJO: solo funciona para funciones continuas sin partes
+si es una funcion como e^x utilizar las variables cas, es decir:
+
+cas_CoeficientesFourier(funct, period, center)
+
+cas_PolinomioFourier(funct, period, center, ord)
+
+
+se busca un polinomio trigonometrico a partir de sin y cos, se nos brinadara la funcion y el rango, a partir de ello obtendremos 3 terminos:
+
+a0, ak, bk, los siguientes valores se usaran para el calculo de estos
+
+rango -> [a b], f(x)
+T -> la distancia entre a y b
+L -> T/2
+
+a0 = 1/T*int(f(x),a,b)
+ak = 1/L*int(f(x)*cos(k*pi*x/L),a,b)
+bk = 1/L*int(f(x)*sin(k*pi*x/L),a,b)
+
+f(x) (trigonometrica) =
+
+a0 + sum(k=1,n, Ak*Cos(k*pi*x/L) + Bk*sin(k*pi*x/L))
