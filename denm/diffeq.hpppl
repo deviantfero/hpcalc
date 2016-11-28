@@ -1,0 +1,86 @@
+#cas
+cas_euler( fxy, rn, y0, h ):=
+BEGIN
+  local val, yn, i, j;
+  j  := 1;
+  yn := y0;
+  FOR i FROM rn[1] TO rn[size(rn)] STEP h DO
+    M8(j,1) := i;
+    M8(j,2) := yn;
+    val := subst(subst( fxy, x=i ), y=yn );
+    yn  := val * h + yn;
+    M8(j,3) := val;
+    j := j + 1;
+  END;
+  return val;
+END;
+
+cas_heun( fxy, rn, y0, h ):=
+BEGIN
+  local val, yn, i, j, aux, valaux;
+  aux := y0;
+  valaux := 0;
+  yn  := y0;
+  j   := 1;
+
+  FOR i FROM rn[1] TO rn[size(rn)] STEP h DO
+    M8(j,1) := i;
+    M8(j,2) := yn;
+    val  := subst(subst( fxy, x=i ), y=yn );
+    aux  := val * h + yn;
+    valaux := subst(subst( fxy, x=i+h ), y=aux );
+    yn   := yn + (h/2) * (val + valaux);
+    M8(j,3) := val;
+    j := j + 1;
+  END;
+
+  return yn;
+END;
+
+cas_rungek( fxy, rn, y0, h ):=
+BEGIN
+  local val, yn, i, j, k1, k2, k3, k4, aux1, aux2, aux3;
+  j := 1;
+  yn := y0;
+  FOR i FROM rn[1] TO rn[size(rn)] STEP h DO
+    M8(j,1) := i;
+    M8(j,2) := yn;
+    val  := subst( subst(fxy, x=i), y=yn );
+    //Aux are the functions in runge-kutta which
+    //involve substitution
+    k1   := h * val;
+    aux1 := subst( subst(fxy, x=(i + h/2)), y=(yn + k1/2) );
+    k2   := h * aux1;
+    aux2 := subst( subst(fxy, x=(i + h/2)), y=(yn + k2/2) );
+    k3   := h * aux2;
+    aux3 := subst( subst(fxy, x=(i + h)), y=(yn + k3) );
+    k4   := h * aux3;
+    yn   := yn + ((1/6) * (k1 + 2*k2 + 2*k3 + k4));
+    M8(j,3) := k1;
+    M8(j,4) := k2;
+    M8(j,5) := k3;
+    M8(j,6) := k4;
+    M8(j,7) := val;
+    j := j +1;
+  END;
+
+  return yn;
+END;
+#end
+
+//////////////CAS ENDS//////////////
+
+EXPORT euler( fxy, rn, y0, h )
+BEGIN
+  return cas_euler( fxy, rn, y0, h );
+END;
+
+EXPORT heun( fxy, rn, y0, h )
+BEGIN
+  return cas_heun( fxy, rn, y0, h );
+END;
+
+EXPORT rungek( fxy, rn, y0, h )
+BEGIN
+  return cas_rungek( fxy, rn, y0, h );
+END;
