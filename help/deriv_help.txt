@@ -1,0 +1,54 @@
+FUNCIONES HP:
+
+ProgressiveDiff(f,var,val,h,gra)
+|
+->  Devuelve el valor de la derivada de grado n
+    y registra el procedimiento en M6, utilizando
+    Diferencias progresivas
+
+CenteredDiff(f,var,val,h,gra)
+|
+->  Devuelve el valor de la derivada de grado n
+    y registra el procedimiento en M7, utilizando
+    Diferencias centrales
+
+si las funciones nos dicen wrong argument o un error
+similar, cambiar la primera letra por una minuscula
+
+donde f: es una funcion
+donde var: es la variable
+donde val: es el valor en que se evaluara
+donde h: es el paso que se tomara
+donde grad: es la derivada que se desea obtener 1ra, 2da etc
+
+M8 y M7 son donde se dejara la tabla del procedimiento
+respectivamente de cada funcion
+
+formato de la tabla:
+
+| x | y | diferencias |
+|---|---|-------------|
+
+====================================
+
+ACERCA DE EJERCICIOS:
+
+nos pediran la n derivada de una funcion evaluada
+en un numero en especifico, con un paso h, nos 
+pueden pedir que utilizemos diferencias progresivas
+o diferencias centrales algunas formulas a recordar:
+
+>>>>>DIFERENCIAS PROGRESIVAS:
+
+Δf(x) = f(x + h) - f(x)
+
+Δ^kf(x) = Δ^k-1f(x + h) - Δ^k-1f(x)
+
+Δ^kf(x)/k^h == Kesima derivada
+
+>>>>>DIFERENCIAS CENTRALES:
+
+ðf(x) = f( x + h/2 ) - f( x - h/2 )
+
+ð^kf(x)/k^h == Kesima derivada
+

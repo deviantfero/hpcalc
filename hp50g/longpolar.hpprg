@@ -1,0 +1,30 @@
+%%HP: T(0)A(D)F(.);
+@ Argumentos:
+@ Autor:
+@ E-mail:
+@ VersiÛn:
+@ Creado con HPUserEdit 6
+
+´
+"LONGITUD POLAR"
+{
+{ "R(X):" "'R(x)'"  }
+{ "D:" "Dominio {-L, L}"  }
+}
+1
+{ }
+{ }
+INFORM
+IF
+THEN
+	OBJç DROP
+  	 ç RX DOM
+	´
+		DOM 1 GET 'NL' STO @INFERIRO LIMIT
+		DOM 2 GET 'L'  STO @SUPERIOR LIMIT
+		NL L RX SQ RX DERVX SQ + É 'X' Ñ		
+	ª
+END
+'NL' PURGE
+'L'  PURGE
+ª

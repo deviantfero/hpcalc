@@ -1,0 +1,105 @@
+RECORDATORIO
+si al poner la cantidad correcta
+de argumentos la calculadora dice
+wrong argument, o da un error
+agregar cas_ antes de la funcion
+
+DERIVADAS <------
+
+>>>>>>>>>>>>>SIN TALBA
+
+dcentral( fx, var, h, orden )
+|
+->  Devuelve una expresion en la 
+    que se evalua el valor a obtener
+    con diferencias centrales
+
+dprogre( fx, var, h, orden )
+|
+->  Devuelve una expresion en la 
+    que se evalua el valor a obtener
+    con diferencias progresivas
+
+>>>>>>>>>>>>>CON TALBA
+
+((si una de estas no funciona llamarla con la
+  primera letra en minuscula))
+
+ProgressiveDiff(f,var,val,h,gra)
+|
+->  Devuelve el valor de la derivada de grado n
+    y registra el procedimiento en M6, utilizando
+    Diferencias progresivas
+
+CenteredDiff(f,var,val,h,gra)
+|
+->  Devuelve el valor de la derivada de grado n
+    y registra el procedimiento en M7, utilizando
+    Diferencias centrales
+
+
+============================
+
+INTEGRALES <------
+
+trapecio( fx, var, a, b, n )
+|
+->  retorna el resultado numerico de 
+    la integral utilizando el metodo
+    de los trapezoides
+
+tsimpson( fx, var, a, b, n )
+|
+->  retorna el resultado numerico de 
+    la integral utilizando el metodo
+    de simpson utilizando un grado de 2*n
+
+============================
+
+EQUACIONES DIFERENCIALES <-----------
+
+rn, es un rango que consiste en nuestro
+x de la condicion inicial y el x que queremos
+evaluar en la solucion de la ecuacion 
+diferencial.
+
+NOTA, fxy solo pueden estar en funcion de x,y u ambas
+
+LO QUE NOS INTERESA ES yn!!!!
+
+euler( fxy, { rn }, y0, h )
+|
+->  retorna la aproximación de evaluar
+    el ultimo elemento del rango en la
+    funcion solucion de la ecuacion diferencial
+    deja plasmado en M8 la tabla con el siguien-
+    te orden.
+
+    M8:
+    | x | yn (aproximaciones) | f(x,y) evaluada |
+    |---|---------------------|-----------------|
+
+heun( fxy, { rn }, y0, h )
+|
+->  retorna la aproximación de evaluar
+    el ultimo elemento del rango en la
+    funcion solucion de la ecuacion diferencial
+    deja plasmado en M8 la tabla con el siguien-
+    te orden.
+
+    M8:
+    | x | yn (aproximaciones) | f(x,y) evaluada |
+    |---|---------------------|-----------------|
+
+rungek( fxy, { rn }, y0, h )
+|
+->  retorna la aproximación de evaluar
+    el ultimo elemento del rango en la
+    funcion solucion de la ecuacion diferencial
+    deja plasmado en M8 la tabla con el siguien-
+    te orden.
+
+    M8:
+    | x | yn | k1 | k2 | k3 | k4 | f(x,y) |
+    |---|----|----|----|----|----|--------|
+

@@ -1,0 +1,242 @@
+#cas
+cas_discreto(fa, lx, ly, var):=
+BEGIN
+  local qa, qtmp, ma, mf, i, j, fy, pans, px, py;
+
+  qa := []; ma := []; qtmp := []; mf := []; fy := [];
+  pans := 0; py:=[]; px:=[];
+
+  PRINT("M8 holds the unsolved matrix for procedure");
+  IF size(lx) <> size(ly) THEN
+    IF size(ly) == 1 THEN
+      FOR i FROM 1 TO size(lx) DO
+        fy := CONCAT( fy, EVAL(subst(ly, var=lx(i))) );
+      END;
+      py := fy;
+    END;
+    return 0;
+  ELSE
+    FOR i FROM 1 TO size(lx) DO
+      py := CONCAT(py, ly(i));
+    END;
+  END;
+
+  FOR i FROM 1 TO size(lx) DO
+    px := CONCAT(px, lx(i));
+  END;
+
+  //filling Qs
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(px) DO
+      qtmp := CONCAT( qtmp, EVAL(subst(fa(i), var=px(j))) );
+    END;
+    qa := CONCAT( qa, qtmp );
+    qtmp := []
+  END;
+
+  //converting to matrix
+  qa := list2mat(qa, size(px));
+
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(fa) DO
+      ma := CONCAT( ma, qa(i)*qa(j) );
+      M8(j,i) := approx(EVAL(qa(i)*qa(j)));
+    END;
+    mf := CONCAT( mf, qa(i)*py );
+    M8(i,size(fa)+1) := approx(EVAL(qa(i)*py));
+  END;
+
+  ma := list2mat(ma, size(fa));
+  ADDCOL(ma, mf, size(fa) + 1);
+  ma := RREF(ma);
+
+  FOR i FROM 1 TO size(fa) DO
+    qtmp := CONCAT(qtmp, ma[i][size(fa)+1])
+    pans := pans + fa(i)*ma[i][size(fa)+1];
+  END;
+
+  PRINT("Cn in order:\n" + approx(qtmp));
+  return pans;
+
+END;
+
+//caso Exponencial discreto
+
+cas_discretoexp(fa, lx, ly, var):=
+BEGIN
+  local qa, qtmp, ma, mf, i, j, fy, pans;
+
+  qa := []; ma := []; qtmp := []; mf := []; fy := [];
+  pans := 0; py:=[]; px:=[];
+
+  PRINT("M8 holds the unsolved matrix for procedure");
+  IF size(lx) <> size(ly) THEN
+    IF size(ly) == 1 THEN
+      FOR i FROM 1 TO size(lx) DO
+        fy := CONCAT( fy, EVAL(subst(ln(ly), var=lx(i))) );
+      END;
+      py := fy;
+    END;
+    return 0;
+  ELSE
+    FOR i FROM 1 TO size(ly) DO
+      qtmp := CONCAT(qtmp, ln(ly(i)) );
+    END;
+  END;
+
+  py := qtmp;
+  qtmp := [];
+
+  FOR i FROM 1 TO size(lx) DO
+    qtmp := CONCAT(qtmp, lx(i) );
+  END;
+
+  px := qtmp;
+  qtmp := [];
+
+  //filling Qs
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(px) DO
+      qtmp := CONCAT( qtmp, EVAL(subst(fa(i), var=px(j))) );
+    END;
+    qa := CONCAT( qa, qtmp );
+    qtmp := []
+  END;
+
+  //converting to matrix
+  qa := list2mat(qa, size(px));
+
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(fa) DO
+      ma := CONCAT( ma, qa(i)*qa(j) );
+      M8(j,i) := approx(EVAL(qa(i)*qa(j)));
+    END;
+    mf := CONCAT( mf, qa(i)*py );
+    M8(i,size(fa)+1) := approx(EVAL(qa(i)*py));
+  END;
+
+  ma := list2mat(ma, size(fa));
+  ADDCOL(ma, mf, size(fa) + 1);
+  ma := RREF(ma);
+
+  FOR i FROM 1 TO size(fa) DO
+    qtmp := CONCAT(qtmp, ma[i][size(fa)+1])
+    pans := pans + fa(i)*ma[i][size(fa)+1];
+  END;
+
+  PRINT("Cn in order:\n" + approx(qtmp));
+  return EXP(pans);
+
+END;
+
+
+cas_continuo(fa, lx, fx):=
+BEGIN
+  local qa, qtmp, mf, i, j, pans, tmp, px;
+
+  qa := []; qtmp := []; mf := [];
+  pans := 0; tmp := 0; px:=[];
+
+  PRINT("M8 holds the unsolved matrix for procedure");
+
+  //filling Qs
+  FOR i FROM 1 TO size(lx) DO
+    px := CONCAT(px, lx(i));
+  END;
+
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(fa) DO
+      tmp := int(fa(i)*fa(j),x,px(1),px(2));
+      qtmp := CONCAT( qtmp, tmp);
+      M8(j,i) := approx(EVAL(tmp));
+    END;
+    qa := CONCAT( qa, qtmp );
+    tmp := int(fa(i)*fx,x,px(1),px(2));
+    mf := CONCAT(mf, tmp );
+    M8(i, size(fa)+1) := approx(EVAL(tmp));
+    qtmp := []
+  END;
+
+  //converting to matrix
+  qa := list2mat(qa, size(fa));
+
+  ADDCOL(qa, mf, size(fa) + 1);
+  qa := RREF(qa);
+  print(qa);
+
+  FOR i FROM 1 TO size(fa) DO
+    qtmp := CONCAT(qtmp, qa[i][size(fa)+1])
+    pans := pans + fa(i)*qa[i][size(fa)+1];
+  END;
+
+  PRINT("Cn in order:\n" + approx(qtmp));
+  return expand(approx(pans));
+
+END;
+
+//caso continuo EXP
+cas_continuoexp(fa, lx, fx):=
+BEGIN
+  local qa, qtmp, mf, i, j, pans, tmp, px;
+
+  qa := []; qtmp := []; mf := [];
+  pans := 0; tmp := 0; px:=[];
+
+  FOR i FROM 1 TO size(lx) DO
+    px := CONCAT(px, lx(i));
+  END;
+
+  PRINT("M8 holds the unsolved matrix for procedure");
+
+  //filling Qs
+  FOR i FROM 1 TO size(fa) DO
+    FOR j FROM 1 TO size(fa) DO
+      tmp := int(fa(i)*fa(j),x,px(1),px(2));
+      qtmp := CONCAT( qtmp, tmp);
+      M8(j,i) := approx(EVAL(tmp));
+    END;
+    qa := CONCAT( qa, qtmp );
+    tmp := int(fa(i)*ln(fx),x,px(1),px(2));
+    mf := CONCAT(mf, tmp );
+    M8(i, size(fa)+1) := approx(EVAL(tmp));
+    qtmp := []
+  END;
+
+  //converting to matrix
+  qa := list2mat(qa, size(fa));
+
+  ADDCOL(qa, mf, size(fa) + 1);
+  qa := RREF(qa);
+  print(qa);
+
+  FOR i FROM 1 TO size(fa) DO
+    qtmp := CONCAT(qtmp, qa[i][size(fa)+1])
+    pans := pans + fa(i)*qa[i][size(fa)+1];
+  END;
+
+  PRINT("Cn in order:\n" + approx(qtmp));
+
+  return EXP(expand(approx(pans)));
+
+END;
+#end
+
+EXPORT discreto(fa, lx, ly, var)
+BEGIN
+  return cas_discreto(fa, lx, ly, var);
+END;
+
+EXPORT discretoexp(fa, lx, ly, var)
+BEGIN
+  return cas_discretoexp(fa, lx, ly, var);
+END;
+
+EXPORT continuo(fa, lx, fx)
+BEGIN
+  return cas_continuo(fa, lx, fx);
+END;
+
+EXPORT continuoexp(fa, lx, fx)
+BEGIN
+  return cas_continuoexp(fa, lx, fx);
+END;

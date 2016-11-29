@@ -1,0 +1,50 @@
+#cas
+
+//Metodo trapezoide
+cas_trapecio( fx, var, a, b, n ):=
+BEGIN
+  local h, tn, middle;
+  h      := (b - a)/n;
+  middle := sum( subst(fx, var=(a+j*h)), j, 1, n )
+  tn     := subst(fx, var=a)/2 + middle + subst(fx, var=b)/2;
+  return h * tn;
+END;
+
+cas_err_trap( fx, var, a, b, n ):=
+BEGIN
+  local h, dmax, dx2;
+  h   := (b - a)/n;
+  dx2 := diff( diff(fx, var), var);
+  mx  := max( [abs(subst(fx, var=a)), abs(subst(fx, var=b))] );
+  return ((n * h)/12) * (mx * h^2);
+END;
+
+cas_tsimpson( fx, var, a, b, n ):=
+BEGIN
+  local h, s2n, s4n, fa, fb;
+  h   := (b-a)/(2*n);
+  fa  := subst( fx, var=a );
+  fb  := subst( fx, var=b );
+  s4n := 4*sum( subst(fx, var=(a + (2*j-1)*h)), j, 1, n );
+  s2n := 2*sum( subst(fx, var=(a + 2*j*h)), j, 1, n - 1 );
+  return (h/3)*(fa + fb + s4n + s2n);
+END;
+
+#end
+
+///////////////////CAS ENDS//////////////////
+
+EXPORT trapecio( fx, var, a, b, n )
+BEGIN
+  return cas_trapecio( fx, var, a, b, n );
+END;
+
+EXPORT err_trap( fx, var, a, b, n )
+BEGIN
+  return cas_err_trap( fx, var, a, b, n );
+END;
+
+EXPORT tsimpson( fx, var, a, b, n )
+BEGIN
+  return cas_tsimpson( fx, var, a, b, n );
+END;

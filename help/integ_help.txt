@@ -1,0 +1,42 @@
+FUNCIONES HP:
+
+trapecio( fx, var, a, b, n )
+|
+->  retorna el resultado numerico de 
+    la integral utilizando el metodo
+    de los trapezoides
+
+tsimpson( fx, var, a, b, n )
+|
+->  retorna el resultado numerico de 
+    la integral utilizando el metodo
+    de simpson utilizando un grado de 2*n
+
+donde fx: es una funcion
+donde var: es la variable
+donde a, b: son el rango
+donde n: son el numero de trapezoides deseados
+
+=====================================
+
+ACERCA DE EJERCICIOS:
+
+acerca de los ejercicios:
+se nos pedira la integral de a, b de fx
+con un cierto numero de trapezoides o un
+Simpson 'n', a continuacion las formulas
+de cada uno de estos metodos
+
+>>>>>>TRAPEZOIDE:
+
+Tn = h*[ (f(a)/2) + Σ(1, k, j, [f(a + j*h)]) + (f(b)/2) ]
+
+esto se lee como:
+
+la altura (h) multiplicada por la funcion
+evaluada en 'a' dividida entre 2 (f(a)/2) mas
+la sumatoria de j=1 a k de f(a + j*h) 
+Σ(1, k, j, [f(a + j*h)]), mas la funcion evaluada
+en 'b' sobre 2 (f(b)/2)
+
+>>>>>>SIMPSON:

@@ -1,0 +1,94 @@
+#cas
+//By Alejandro Velasco
+
+progressiveDiff(f,var,val,h,gra):=
+BEGIN
+  local i, arr, aux, coeffs, xs, ys, j, temp;
+  coeffs:=[];
+  aux:=subst(f,var=x);
+  arr:=[];
+  xs:=[];
+  ys:=[];
+
+  FOR i FROM 0 to gra DO
+    xs:=append(xs, (val + (gra-i)*h));
+    coeffs:=append(coeffs,((-1)^i)*COMB(gra,i));
+    arr:=append(arr,coeffs[i+1] * subst(aux, x=(xs[i+1])));
+  END;
+
+  ys:=map(xs,(x)->f);
+  
+  M6:=[[]];
+
+  FOR i from 1 to 2 DO
+    FOR j from 1 to length(xs) DO
+       IF i == 1 THEN
+          M6(j,i):=xs[j];
+       ELSE
+          M6(j,i):=ys[j];
+       END;
+    END;
+  END;
+
+  
+  FOR i FROM 3 TO gra + 2 DO
+     FOR j FROM (i-1) TO length(xs) DO
+         M6(j,i):=M6(j,i-1) - M6(j-1,i-1);
+     END;
+
+  END;
+
+  //print(Σ(arr));
+  //print(h^(gra));
+  return ΣLIST(arr)/(h^(gra));
+END;
+
+centeredDiff(f,var,val,h,gra):=
+BEGIN
+  local i, arr, aux, coeffs, xs, ys, j, temp;
+  coeffs:=[];
+  aux:=subst(f,var=x);
+  arr:=[];
+  xs:=[];
+  ys:=[];
+
+  FOR i FROM 0 to gra DO
+    xs:=append(xs, val+(gra-2*i)*h/2);
+    coeffs:=append(coeffs,((-1)^i)*COMB(gra,i));
+    arr:=append(arr,coeffs[i+1] * subst(aux, x=(xs[i+1])));
+  END;
+  ys:=map(xs,(x)->f);
+  
+  M7:=[[]];
+
+  FOR i from 1 to 2 DO
+    FOR j from 1 to length(xs) DO
+       IF i == 1 THEN
+          M7(j,i):=xs[j];
+       ELSE
+          M7(j,i):=ys[j];
+       END;
+    END;
+  END;
+
+  
+  FOR i FROM 3 TO gra + 2 DO
+     FOR j FROM (i-1) TO length(xs) DO
+         M7(j,i):=M7(j,i-1) - M7(j-1,i-1);
+     END;
+
+  END;
+
+  return ΣLIST(arr)/(h^gra);
+END;
+#end
+
+EXPORT ProgressiveDiff(f,var,val,h,gra)
+BEGIN
+   return progressiveDiff(f,var,val,h,gra);
+END;
+
+EXPORT CenteredDiff(f,var,val,h,gra)
+BEGIN
+   return centeredDiff(f,var,val,h,gra);
+END;

@@ -1,0 +1,106 @@
+#cas
+cas_CoeficientesFourier(funct,period,center):=
+BEGIN
+  local a0, ak, bk, lran;
+  lran:= period/2;
+  a0:=(1/2lran)*int(funct, x, -lran + center, lran + center);
+  ak:=(1/lran)*int(funct*COS((k*π*x)/lran), x, -lran + center, lran + center);
+  bk:=(1/lran)*int(funct*SIN((k*π*x)/lran), x, -lran + center, lran + center);
+  
+  return a0, ak, bk;
+END;
+
+cas_PolinomioFourier(funct, period, center, ord):=
+BEGIN
+  local tf, pol, term1, term2;
+  tf := [];
+  pol := 0;
+  tf := cas_CoeficientesFourier(funct, period, center); 
+  a0 := approx(tf(1));
+  term1 := tf(2)*cos((k*π*x/(period/2)));
+  term2 := tf(3)*sin((k*π*x/(period/2)));
+  suma := sum(term1 + term2,k,0,ord,1);
+  PRINT(pol);
+  return a0 + approx(suma);
+END;
+
+fourierPar(funct,period,center):=
+BEGIN
+  local a0, ak;
+
+  a0:=(1/period)*int(funct, x, center, period + center);
+  ak:=(2/period)*int(funct*COS((k*π*x)/period), x, center, period + center);
+  return a0, ak;
+END;
+
+fourierImpar(funct,period,center):=
+BEGIN
+  local bk;
+
+  //a0:=(1/period)*int(funct, x, center, period + center);
+  bk:=(2/period)*int(funct*SIN((k*π*x)/period), x, center, period + center);
+  return bk;
+END;
+
+errorCuadratico(funct,period,center,nval):=
+BEGIN
+   local errF, aux, lran, temp, temp2, temp3;
+   lran:= period/2;
+   aux:=fourierCoefs(funct,period,center);
+   temp:=(aux(2)^2) + (aux(3)^2); //MSGOX(temp);
+   temp2:=2*aux(1)^2; //MSGBOX(temp);
+   temp3:=sum(temp,k,1,nval); //MSGBOX(temp3);
+   errF:=int((funct^2),x,-lran + center, lran + center) - lran*(temp2 + temp3);
+   return errF;
+END;
+#end
+
+KEY K_Power()
+BEGIN
+  MSGBOX("NOTA: SOLO ACEPTA COMO VARIABLE A X, HACER EL RESPECTIVO CAMBIO DE VARIABLE DE SER NECESARIO EN LA FUNCION 
+   fourierCoefs(<funcion>,<periodo>,<centro>)");
+  return "fourierCoefs()";
+END;
+
+KEY K_Eex()
+BEGIN
+  MSGBOX("fourierPar(<funcion>,<periodo>,<centro>)");
+  return "fourierPar()";
+END;
+
+KEY K_Tan()
+BEGIN
+  MSGBOX("fourierImpar(<funcion>,<periodo>,<centro>)");
+  return "fourierImpar()";
+END;
+
+KEY K_3()
+BEGIN
+  MSGBOX("errorCuadratico(<funcion>,<periodo>,<centro>,<nval>)");
+  return "errorCuadratico()";
+END;
+
+EXPORT CoeficientesFourier(fun,per,cent)
+BEGIN
+  cas_CoeficientesFourier(fun,per,cent);
+END;
+
+EXPORT PolinomioFourier(fun,per,cent, ord)
+BEGIN
+  cas_PolinomioFourier(fun,per,cent, ord);
+END;
+
+EXPORT FourierPar(fun,per,cent)
+BEGIN
+  return exact(fourierPar(fun,per,cent));
+END;
+
+EXPORT FourierImpar(fun,per,cent)
+BEGIN
+  return exact(fourierImpar(fun,per,cent)); 
+END;
+
+EXPORT ErrorCuadratico(fun,per,cent,nval)
+BEGIN
+  return exact(errorCuadratico(fun,per,cent,nval)); 
+END;

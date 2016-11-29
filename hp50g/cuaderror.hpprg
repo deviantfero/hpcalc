@@ -1,0 +1,44 @@
+%%HP: T(0)A(D)F(.);
+@ Argumentos:
+@ Autor:
+@ E-mail:
+@ VersiÛn:
+@ Creado con HPUserEdit 6
+
+´
+"MINIMAL CUADRATIC ERROR"
+{
+{ "A0" "A0"  }
+{ "Ak" "'Ak'"  }
+{ "Bk" "'Bk'"  }
+{ "L" "{-L L}" }
+{ "F(X)" "'F(X)'"  } @ORIGINAL FUNCTION IS IN F0
+{ "N" "N"  } @NUMBER OF S's
+}
+2
+{ }
+{ }
+INFORM
+IF
+THEN
+	OBJç DROP
+	 ç A0 Ak Bk L F0 N
+	´									
+		L 2 GET 'NL' STO @POSITIVE LIMIT
+		L 1 GET 'L'  STO @NEGATIVE LIMIT
+
+		L NL F0 SQ 'X' Ñ 'INTX' STO
+		A0 SQ 2 * K 1 N Ak SQ Bk SQ + Ö + 'ERR' STO
+		ERR NL * 'ERR' STO
+		INTX ERR - 'ERR' STO
+		ERR çNUM 'ERR' STO
+		"SU ERROR ES: " ERR +
+		SCROLL
+		"EL ERROR SE GUARDO EN 'ERR'" MSGBOX
+		'NL'   PURGE
+		'INTX' PURGE
+	ª
+	 
+END
+
+ª
