@@ -40,3 +40,13 @@ la sumatoria de j=1 a k de f(a + j*h)
 en 'b' sobre 2 (f(b)/2)
 
 >>>>>>SIMPSON:
+
+S2n = (h/3)*[ f(a) + f(b) + 4*Σ(1, k, j, f(a+(2*j-1)*h)) 
++ 2*Σ(1, k-1, j, f(a+2*j*h)) ]
+
+esto se lee como:
+
+la altura (h) dividida entre 3 multiplicada por
+la agrupacion de: f(a) + f(b) mas 4 veces la sumatoria
+de j=1 a k de f(a +(2*j-1)*h) mas 2 veces la sumatoria
+de j=1 a k-1 de f(a + 2*j*h)
