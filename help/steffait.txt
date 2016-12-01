@@ -1,0 +1,22 @@
+al principio se tiene 1 punto gx y la variable
+
+gx se saca despejando x de fx
+
+evaluas evaluas el punto en la funcion, eso es pk0, evaluas ese pk0 en la funcion y eso es pk1
+
+de ahi aplicas la formula, siendo el punto a, pk0 es b y pk1 es c
+
+xn+1 = xn-(((g(xn)-xn)^2)/(g(g(xn)-(2*g(xn))+xn))
+
+o sino xn+1 = a - ((b-a)^2 / (c-2b+a))
+
+a es el punto, b es el punto evaluado en la funcion y c es b evaluado en la funcion
+
+ambos tienen la misma formula
+en lo que difieren es que en steffensen
+tomas tu x3 como tu nuevo x0
+y en aitken tomas x2 (osea c) como tu nuevo x0
+
+ahh pero no te olvides del cambio aitken con el inicial de la nueva iteracion
+ahh y la respuesta va quedando en el valor que obtenes con la formula a- (b-a)^2
+gg chivo
