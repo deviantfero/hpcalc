@@ -69,18 +69,16 @@ BEGIN
     right:=local_result[2];
  
     //assembling left side
-    FOR l FROM 1 TO length(conn_matrix) DO
-      elements:=conn_matrix[l];
-      FOR m FROM 1 TO length(elements) DO 
-        index_i:=elements[m];
-        FOR n FROM 1 to length(elements) DO
-          index_j:=elements[n];
-          aux:=M1(index_i,index_j)+left[m][n];
+    elements:=conn_matrix[i];
+    FOR m FROM 1 TO length(elements) DO 
+      index_i:=elements[m];
+      FOR n FROM 1 to length(elements) DO
+        index_j:=elements[n];
+        aux:=M1(index_i,index_j)+left[m][n];
           
-          M1(index_i,index_j):=approx(aux);
-        END;
-      END; 
-    END;
+        M1(index_i,index_j):=approx(aux);
+      END;
+    END; 
 
     //assembling right side
     FOR l FROM 1 TO length(conn_matrix) DO
