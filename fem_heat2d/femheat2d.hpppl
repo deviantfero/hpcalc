@@ -1,5 +1,5 @@
 #cas
-heatfem2d(k,q,p1,p2,p3):=
+heatfem2d_local(k,q,p1,p2,p3):=
 BEGIN
   local x1, x2, x3, y1, y2, y3, left, right, xs, ys, a, b, c, d, res;
   
@@ -15,7 +15,7 @@ BEGIN
   xs:=[x1,x2,x3];
   ys:=[y1,y2,y3];
  
-  //getting values for the integrals of left side
+  //getting values for the integral of left side
   a:=min(xs);
   b:=max(xs);
   c:=min(ys);
@@ -31,6 +31,69 @@ BEGIN
   //rightside
   right:=q*det([[x2-x1,x3-x1],[y2-y1,y3-y1]]);
   right:=right*[[0],[0.5],[0.5]]; 
-
+  
   return res*left, right;  
 END;
+
+heatfem2d(k, q, conn_matrix, dots_matrix):=
+BEGIN
+  local size_assembly, i, j, o, l, m, n, points, point, aux, local_result, elements, left, right, result, index_i, index_j;
+  
+  //cleaning matrixes, M1 will be used for assembling left side, and M2 for right side
+  M1:=[[]];
+  M2:=[[]];
+  size_assembly:=length(dots_matrix);
+  REDIM(M1,{size_assembly, size_assembly}); 
+  REDIM(M2,{size_assembly,1});
+
+  //doing this for every element
+  FOR i FROM 1 TO length(conn_matrix) DO
+    points:=[];
+    FOR j FROM 1 TO 3 DO
+      //aux holds the number of the point 
+      aux:=conn_matrix[i][j];
+      
+      //getting point from dots matrix 
+      point:=[];
+      FOR o FROM 1 TO 2 DO
+        point:=append(point, dots_matrix[aux][o]); 
+      END
+      
+      points:=append(points, point);
+    END;
+    
+    //getting local result
+    local_result:=heatfem2d_local(k, q, points[1], points[2], points[3]); 
+    
+    left:=local_result[1];
+    right:=local_result[2];
+ 
+    //assembling left side
+    FOR l FROM 1 TO length(conn_matrix) DO
+      elements:=conn_matrix[l];
+      FOR m FROM 1 TO length(elements) DO 
+        index_i:=elements[m];
+        FOR n FROM 1 to length(elements) DO
+          index_j:=elements[n];
+          aux:=M1(index_i,index_j)+left[m][n];
+          
+          M1(index_i,index_j):=approx(aux);
+        END;
+      END; 
+    END;
+
+    //assembling right side
+    FOR l FROM 1 TO length(conn_matrix) DO
+      elements:=conn_matrix[l];
+      FOR m FROM 1 to 3 DO
+        index_i:=elements[m];
+        aux:=approx(M2(index_i,1)+right[m]);
+        
+        M2(index_i,1):=aux;
+      END; 
+    END; 
+  END;
+
+  return M1,M2;   
+END; 
+#end
